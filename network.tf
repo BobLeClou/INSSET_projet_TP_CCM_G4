@@ -9,5 +9,5 @@ module "network" {
 
     #Paramètre du sous-réseau correspondant
     subnetwork_name = lookup(each.value, "subnetwork_name", null)
-    vpc_name = lookup(each.value, "subnetwork_ip_cidr_range", null)
+    subnetwork_ip_cidr_range = lookup(each.value, "subnetwork_ip_cidr_range", null)
 }
