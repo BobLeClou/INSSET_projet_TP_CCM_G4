@@ -32,3 +32,27 @@ variable "instance_groups" {
   }))
     default = {}
 }
+
+# ====================================
+# Service Accounts + IAM (map pour for_each)
+# ====================================
+# Permet de définir plusieurs comptes de service et leurs rôles projet.
+# Exemple de structure dans un tfvars:
+# service_accounts = {
+#   sa-app = {
+#     account_id   = "sa-app"
+#     display_name = "SA Application"
+#     description  = "Compte de service pour l'app"
+#     roles        = ["roles/storage.objectAdmin", "roles/logging.logWriter"]
+#   }
+# }
+variable "service_accounts" {
+  description = "Map des Service Accounts à créer et rôles à appliquer"
+  type = map(object({
+    account_id   = optional(string)
+    display_name = optional(string)
+    description  = optional(string)
+    roles        = optional(list(string), [])
+  }))
+  default = {}
+}

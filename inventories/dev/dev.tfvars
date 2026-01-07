@@ -22,8 +22,8 @@ instance_groups = {
 		source_image        = "debian-cloud/debian-11"
 
 		# Placeholders réseau à remplacer
-		vpc_id        = "A CHANGER-network-self-link"
-		subnetwork_id = "A CHANGER-frontend-subnet-self-link"
+		vpc_id        = "vpc-front"
+		subnetwork_id = "subnet-front"
 
 		metadata = {
 			startup-script = <<-EOT
@@ -48,8 +48,8 @@ instance_groups = {
 		source_image        = "debian-cloud/debian-11"
 
 		# Placeholders réseau à remplacer
-		vpc_id        = "A CHANGER-network-self-link"
-		subnetwork_id = "A CHANGER-backend-subnet-self-link"
+		vpc_id        = "vpc-back"
+		subnetwork_id = "subnet-back"
 
 		metadata = {
 			startup-script = <<-EOT
@@ -70,8 +70,8 @@ instance_groups = {
 		source_image        = "debian-cloud/debian-11"
 
 		# Placeholders réseau à remplacer
-		vpc_id        = "A CHANGER-network-self-link"
-		subnetwork_id = "A CHANGER-bastion-subnet-self-link"
+		vpc_id        = "vpc-bastion"
+		subnetwork_id = "subnet-bastion"
 
 		metadata = {
 			startup-script = <<-EOT
@@ -81,5 +81,31 @@ instance_groups = {
 				echo "Bastion instance ready" > /tmp/bastion_ready.txt
 			EOT
 		}
+	}
+}
+
+# ====================================
+# Service Accounts (exemples DEV)
+# ====================================
+service_accounts = {
+	sa-app = {
+		# Si omis, account_id = clé de la map (ici "sa-app")
+		account_id   = "sa-app"
+		display_name = "SA Application"
+		description  = "Compte de service pour l'application"
+		roles        = [
+			"roles/storage.objectAdmin",
+			"roles/logging.logWriter"
+		]
+	}
+
+	sa-ci = {
+		account_id   = "sa-ci"
+		display_name = "SA CI/CD"
+		description  = "Compte de service pour pipeline CI/CD"
+		roles        = [
+			"roles/storage.admin",
+			"roles/iam.serviceAccountUser"
+		]
 	}
 }

@@ -70,3 +70,19 @@ module "instances_groups" {
   # Health check optionnel
   health_check_id = lookup(each.value, "health_check_id", null)
 }
+
+# ====================================
+# MODULE SA-IAM - VIA MAP ET FOR_EACH
+# ====================================
+# Crée des comptes de service et applique les rôles projet associés.
+
+module "service_accounts" {
+  source   = "./modules/SA-IAM"
+  for_each = var.service_accounts
+
+  project_id         = var.project_id
+  service_account_id = lookup(each.value, "account_id", each.key)
+  display_name       = lookup(each.value, "display_name", null)
+  description        = lookup(each.value, "description", null)
+  roles              = lookup(each.value, "roles", [])
+}
