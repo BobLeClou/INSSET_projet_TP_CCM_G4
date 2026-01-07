@@ -12,11 +12,6 @@ output "terraform_state_bucket" {
   value       = google_storage_bucket.terraform_state.name
 }
 
-output "app_bucket" {
-  description = "Nom du bucket pour les données applicatives"
-  value       = google_storage_bucket.app_bucket.name
-}
-
 # Informations sur les groupes d'instances (agrégées)
 output "instance_group_names" {
   description = "Noms des groupes d'instances créés (par clé: frontend, backend, bastion, ...)"

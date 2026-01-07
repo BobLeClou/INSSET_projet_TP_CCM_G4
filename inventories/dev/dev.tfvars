@@ -14,9 +14,9 @@ zone       = "europe-west1-b"
 # Utilisez des placeholders explicites à remplacer ensuite.
 instance_groups = {
 	frontend = {
-		instance_group_name = "${project_id}-frontend-group"
+		instance_group_name = "g4-insset-projet-2025-frontend-group"
 		base_instance_name  = "frontend"
-		zone                = zone
+		zone                = "europe-west1-b"
 		target_size         = 3
 		machine_type        = "e2-micro"
 		source_image        = "debian-cloud/debian-11"
@@ -40,9 +40,9 @@ instance_groups = {
 	}
 
 	backend = {
-		instance_group_name = "${project_id}-backend-group"
+		instance_group_name = "g4-insset-projet-2025-backend-group"
 		base_instance_name  = "backend"
-		zone                = zone
+		zone                = "europe-west1-b"
 		target_size         = 3
 		machine_type        = "e2-micro"
 		source_image        = "debian-cloud/debian-11"
@@ -62,9 +62,9 @@ instance_groups = {
 	}
 
 	bastion = {
-		instance_group_name = "${project_id}-bastion-group"
+		instance_group_name = "g4-insset-projet-2025-bastion-group"
 		base_instance_name  = "bastion"
-		zone                = zone
+		zone                = "europe-west1-b"
 		target_size         = 1
 		machine_type        = "e2-micro"
 		source_image        = "debian-cloud/debian-11"
@@ -108,8 +108,7 @@ service_accounts = {
 			"roles/iam.serviceAccountUser"
 		]
 	}
-region      = "europe-west1"
-zone        = "europe-west1-b"
+}
 
 # Déclaration des réseaux et sous-réseaux
 networks = {
