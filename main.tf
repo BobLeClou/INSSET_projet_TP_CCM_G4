@@ -54,7 +54,7 @@ module "cloud_sql" {
   project_id      = var.project_id
   region          = var.region
   instance_name   = "mariadb-instance"
-  vpc_network_id  = module.network.vpc_id
+  vpc_network_id  = module.network["cloudsql"].vpc_id
   
   db_password     = "SuperSecurePassword123!"
 }
@@ -66,7 +66,7 @@ module "compute_backend" {
   project_id                = var.project_id
   region                    = var.region
   zone                      = var.zone
-  subnet_id                 = module.network.subnetwork_id
+  subnet_id                 = module.network["back"].subnetwork_id
   
   cloud_sql_connection_name = module.cloud_sql.connection_name
   cloud_sql_private_ip      = module.cloud_sql.private_ip_address
