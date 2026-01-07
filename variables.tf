@@ -56,3 +56,8 @@ variable "service_accounts" {
   }))
   default = {}
 }
+
+variable "networks" {
+    description = "La déclaration des réseaux"
+    type        = map(any)
+}
