@@ -1,3 +1,4 @@
+/*
 # Bucket GCS pour stocker l'état Terraform
 resource "google_storage_bucket" "terraform_state" {
   name          = "${var.project_id}-tfstate"
@@ -25,3 +26,4 @@ resource "google_storage_bucket" "app_bucket" {
 
   uniform_bucket_level_access = true
 }
+*/
