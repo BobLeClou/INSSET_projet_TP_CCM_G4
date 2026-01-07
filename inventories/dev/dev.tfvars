@@ -24,7 +24,7 @@ networks = {
         vpc_name = "vpc-back"
         vpc_description = "Réseau des instances back."
         vpc_auto_create_subnetworks = false
-        subnetwork_name = "subnet-bastion"
+        subnetwork_name = "subnet-back"
         subnetwork_ip_cidr_range = "10.0.3.0/24"
     }
 

@@ -10,3 +10,8 @@ variable "zone" {
     description = "The GCP zone"
     type        = string
 }
+
+variable "networks" {
+    description = "La déclaration des réseaux"
+    type        = map(any)
+}

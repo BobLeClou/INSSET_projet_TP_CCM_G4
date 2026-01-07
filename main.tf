@@ -1,29 +1,15 @@
-# Bucket GCS pour stocker l'état Terraform
-resource "google_storage_bucket" "terraform_state" {
-  name          = "${var.project_id}-tfstate"
-  project       = var.project_id
-  location      = var.region
-  force_destroy = false
+module "network" {
+    source = "./modules/network"
+    for_each = var.networks
 
-  versioning {
-    enabled = true
-  }
+    #Paramètres du réseau
+    vpc_name = lookup(each.value, "vpc_name", null)
+    vpc_description = lookup(each.value, "vpc_description", null)
+    vpc_auto_create_subnetworks = lookup(each.value, "vpc_auto_create_subnetworks", false)
 
-  uniform_bucket_level_access = true
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-# Bucket GCS générique pour l'application
-resource "google_storage_bucket" "app_bucket" {
-  name          = "${var.project_id}-app-data"
-  project       = var.project_id
-  location      = var.region
-  force_destroy = true
-
-  uniform_bucket_level_access = true
+    #Paramètre du sous-réseau correspondant
+    subnetwork_name = lookup(each.value, "subnetwork_name", null)
+    subnetwork_ip_cidr_range = lookup(each.value, "subnetwork_ip_cidr_range", null)
 }
 
 # Service Account créé en premier (avant les modules)
