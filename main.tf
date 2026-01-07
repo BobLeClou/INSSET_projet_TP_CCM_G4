@@ -64,7 +64,7 @@ module "instances_groups" {
   metadata = lookup(each.value, "metadata", {})
 
   # Compte de service
-  service_account_email  = lookup(each.value, "service_account_email", var.service_account_email)
+  service_account_email  = lookup(each.value, "service_account_email", ["A CHANGER-service-account-email-GENERIQUE"])
   service_account_scopes = lookup(each.value, "service_account_scopes", ["cloud-platform"])
 
   # Health check optionnel

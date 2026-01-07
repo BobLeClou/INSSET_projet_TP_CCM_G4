@@ -35,6 +35,8 @@ instance_groups = {
 				echo "Frontend instance ready" > /var/www/html/index.html
 			EOT
 		}
+        service_account_email = "A CHANGER-service-account-email"
+        service_account_scopes = ["cloud-platform"]
 	}
 
 	backend = {
