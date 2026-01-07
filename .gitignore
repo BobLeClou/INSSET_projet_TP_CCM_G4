@@ -1,0 +1,32 @@
+# Terraform files
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# GCP
+.gcp/
+*.json
+service-account-key.json
+
+# OS
+Thumbs.db
+.env
+.env.local
+
+# Logs
+*.log
