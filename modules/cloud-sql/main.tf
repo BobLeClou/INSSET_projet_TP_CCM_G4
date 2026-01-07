@@ -1,5 +1,21 @@
-# Cloud SQL Instance MariaDB avec Private IP
-resource "google_sql_database_instance" "mariadb" {
+resource "google_compute_global_address" "private_ip_address" {
+  project       = var.project_id
+  name          = "cloudsql-private-ip"
+  purpose       = "VPC_PEERING"
+  address_type  = "INTERNAL"
+  prefix_length = 16
+  network       = var.vpc_network_id
+}
+
+# Créer la connexion de service privé
+resource "google_service_networking_connection" "private_vpc_connection" {
+  network                 = var.vpc_network_id
+  service                 = "servicenetworking.googleapis.com"
+  reserved_peering_ranges = [google_compute_global_address.private_ip_address.name]
+}
+
+# Cloud SQL Instance MYSQL avec Private IP
+resource "google_sql_database_instance" "mysql" {
   name             = var.instance_name
   project          = var.project_id
   region           = var.region
@@ -45,13 +61,13 @@ resource "google_sql_database_instance" "mariadb" {
 resource "google_sql_database" "database" {
   name     = var.database_name
   project  = var.project_id
-  instance = google_sql_database_instance.mariadb.name
+  instance = google_sql_database_instance.mysql.name
 }
 
-# Utilisateur root MariaDB (à remplacer par Secret Manager)
+# Utilisateur root MYSQL (à remplacer par Secret Manager)
 resource "google_sql_user" "root" {
   name     = "root"
   project  = var.project_id
-  instance = google_sql_database_instance.mariadb.name
+  instance = google_sql_database_instance.mysql.name
   password = var.db_password
 }

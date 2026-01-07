@@ -2,7 +2,7 @@
 
 # Installation des dépendances
 apt-get update
-apt-get install -y curl wget mariadb-client
+apt-get install -y curl wget mysql-client
 
 # Installation de gcloud CLI si nécessaire
 if ! command -v gcloud &> /dev/null; then
@@ -27,8 +27,8 @@ DB_HOST=$DB_HOST
 DB_PORT=$DB_PORT
 EOF
 
-# Test de connexion à MariaDB
-echo "Testing MariaDB connection..."
+# Test de connexion à MYSQL
+echo "Testing MYSQL connection..."
 mysql -h ${cloud_sql_private_ip} -u $DB_USER -p$DB_PASSWORD -e "SHOW DATABASES;" || echo "Connection failed"
 
 echo "Backend startup completed"

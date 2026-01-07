@@ -53,7 +53,7 @@ module "cloud_sql" {
   
   project_id      = var.project_id
   region          = var.region
-  instance_name   = "mariadb-instance"
+  instance_name   = "mysql-instance"
   vpc_network_id  = module.network["cloudsql"].vpc_id
   
   db_password     = "SuperSecurePassword123!"

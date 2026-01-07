@@ -14,15 +14,15 @@ variable "instance_name" {
 }
 
 variable "database_version" {
-  description = "Database version (e.g., MARIADB_10_6, MARIADB_10_11)"
+  description = "Database version (e.g., MYSQL_8_0, MYSQL_8_4)"
   type        = string
-  default     = "MARIADB_10_6"
+  default     = "MYSQL_8_0"
 }
 
 variable "tier" {
-  description = "Machine tier (e.g., db-f1-micro, db-n1-standard-1)"
+  description = "Machine tier (e.g., db-f1-medium, db-n1-standard-1)"
   type        = string
-  default     = "db-f1-micro"
+  default     = "db-f1-medium"
 }
 
 variable "vpc_network_id" {
