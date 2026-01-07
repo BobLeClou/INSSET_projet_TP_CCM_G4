@@ -9,8 +9,19 @@ variable vpc_description {
   description = "Description du VPC"
 }
 
-variable auto_create_subnetworks {
+variable vpc_auto_create_subnetworks {
   type        = bool
   default     = false
   description = "Auto-génération des sous-réseaux. False par défaut."
+}
+
+
+variable subnetwork_name {
+  type        = string
+  description = "Nom du subnetwork"
+}
+
+variable subnetwork_ip_cidr_range {
+  type        = string
+  description = "Plage d'adresses réseaux utilisé par le sous-réseau"
 }
