@@ -1,7 +1,7 @@
 resource "google_compute_network" "vpc_network" {
   name = var.vpc_name
-  description = vpc.vpc_description
-  auto_create_subnetworks = vpc.vpc_auto_create_subnetworks
+  description = var.vpc_description
+  auto_create_subnetworks = var.vpc_auto_create_subnetworks
 }
 
 resource "google_compute_subnetwork" "subnetwork" {
