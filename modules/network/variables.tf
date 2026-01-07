@@ -15,7 +15,6 @@ variable vpc_auto_create_subnetworks {
   description = "Auto-génération des sous-réseaux. False par défaut."
 }
 
-
 variable subnetwork_name {
   type        = string
   description = "Nom du subnetwork"
