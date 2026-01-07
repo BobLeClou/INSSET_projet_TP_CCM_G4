@@ -8,4 +8,6 @@ resource "google_compute_subnetwork" "subnetwork" {
   name          = var.subnetwork_name
   ip_cidr_range = var.subnetwork_ip_cidr_range
   network       = google_compute_network.vpc_network.id
+
+  depends_on = [google_compute_network.vpc_network]
 }
