@@ -66,7 +66,7 @@ module "compute_backend" {
   project_id                = var.project_id
   region                    = var.region
   zone                      = var.zone
-  subnet_id                 = module.network.backend_subnet_id
+  subnet_id                 = module.network.subnetwork_id
   
   cloud_sql_connection_name = module.cloud_sql.connection_name
   cloud_sql_private_ip      = module.cloud_sql.private_ip_address

@@ -17,7 +17,7 @@ resource "google_sql_database_instance" "mariadb" {
     ip_configuration {
       ipv4_enabled    = false
       private_network = var.vpc_network_id
-      require_ssl     = false
+      ssl_mode        = "ALLOW_UNENCRYPTED_AND_ENCRYPTED"
     }
 
     # Configuration des backups automatiques
