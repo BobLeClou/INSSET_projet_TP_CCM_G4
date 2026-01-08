@@ -135,3 +135,19 @@ module "compute_backend" {
 
   service_account_email = local.service_accounts_emails["backend_sa"]
 }
+
+
+module "firewall" {
+  source = "./modules/pare-feu"
+  for_each = var.firewall_rules
+
+  firewall_name          = lookup(each.value, "firewall_name", null)
+  firewall_network_name  = lookup(each.value, "firewall_network_name", null)
+  firewall_priority      = lookup(each.value, "firewall_priority", 1000)
+  firewall_protocol      = lookup(each.value, "firewall_protocol", "tcp")
+  firewall_ports         = lookup(each.value, "firewall_ports", [])
+  firewall_source_ranges = lookup(each.value, "firewall_source_ranges", [])
+  firewall_target_tags   = lookup(each.value, "firewall_target_tags", [])
+  firewall_direction     = lookup(each.value, "firewall_direction", "INGRESS")
+}
+
