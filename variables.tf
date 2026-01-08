@@ -76,3 +76,20 @@ variable "named_ports" {
   }))
   default = []
 }
+
+#Load balancer
+variable "proxy_subnet_ip_cidr_range" {
+  type        = string
+  description = "La plage d'adresse du sous-réseau des proxies"
+}
+
+variable "allow_proxy_target_tags" {
+  type        = list(any)
+  default     = []
+  description = "description"
+}
+
+variable "firewall_proxy_prority" {
+  type        = number
+  description = "La priorité des règles liés au proxy"
+}

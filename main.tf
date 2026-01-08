@@ -135,3 +135,16 @@ module "compute_backend" {
 
   service_account_email = local.service_accounts_emails["backend_sa"]
 }
+
+#Module Load Balancer
+module "load_balancer" {
+  source = "./modules/load-balancer"
+
+  proxy_subnet_ip_cidr_range = var.proxy_subnet_ip_cidr_range
+  proxy_subnet_network       = module.network["front"].vpc_id
+  allow_proxy_target_tags    = var.allow_proxy_target_tags
+  firewall_proxy_prority     = var.firewall_proxy_prority
+  lb_backend_service_group   = module.instances_groups["frontend"].instance_group_self_link
+
+  depends_on = [module.network, module.instances_groups]
+}
