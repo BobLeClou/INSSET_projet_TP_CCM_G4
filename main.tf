@@ -1,25 +1,4 @@
 # ====================================
-# BUCKETS GCS
-# ====================================
-
-# Ce bucket hébergera le fichier tfstate après le premier apply
-resource "google_storage_bucket" "terraform_state" {
-  name          = "${var.project_id}-tfstate"
-  project       = var.project_id
-  location      = var.region
-  force_destroy = false
-
-  # Active le versioning pour garder l'historique des états
-  versioning {
-    enabled = true
-  }
-  # Protection contre la suppression accidentelle
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-# ====================================
 module "network" {
   source   = "./modules/network"
   for_each = var.networks
@@ -34,29 +13,14 @@ module "network" {
   subnetwork_ip_cidr_range = lookup(each.value, "subnetwork_ip_cidr_range", null)
 }
 
-# Service Account créé en premier (avant les modules)
-resource "google_service_account" "backend_sa" {
-  project      = var.project_id
-  account_id   = "backend-service-account"
-  display_name = "Backend Service Account"
-}
-
-# IAM roles pour le Service Account Backend
-resource "google_project_iam_member" "backend_secret_accessor" {
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = "serviceAccount:${google_service_account.backend_sa.email}"
-}
-
-resource "google_project_iam_member" "backend_cloudsql_client" {
-  project = var.project_id
-  role    = "roles/cloudsql.client"
-  member  = "serviceAccount:${google_service_account.backend_sa.email}"
-}
-
 # ====================================
 # MODULE INSTANCES - VIA MAP ET FOR_EACH
 # ====================================
+# On délègue le réseau à une autre équipe.
+# Ici, on utilise des placeholders explicites "A CHANGER-..."
+# et on instancie le module instances pour chaque entrée de var.instance_groups.
+
+
 module "instances_groups" {
   source   = "./modules/instances"
   for_each = var.instance_groups
@@ -74,23 +38,30 @@ module "instances_groups" {
   source_image = lookup(each.value, "source_image", "os_image")
 
   # Configuration réseau (placeholders si non fournis)
-  vpc_id        = lookup(each.value, "vpc_id", "A CHANGER-network-self-link")
-  subnetwork_id = lookup(each.value, "subnetwork_id", "A CHANGER-${each.key}-subnet-self-link")
+  vpc_id        = lookup(each.value, "vpc_id")
+  subnetwork_id = lookup(each.value, "subnetwork_id")
 
   # Métadonnées (scripts de démarrage, etc.)
   metadata = lookup(each.value, "metadata", {})
 
   # Compte de service
-  service_account_email  = lookup(each.value, "service_account_email", ["A CHANGER-service-account-email-GENERIQUE"])
-  service_account_scopes = lookup(each.value, "service_account_scopes", ["cloud-platform"])
+  service_account_email  = local.instance_sa_emails[each.key]
+  service_account_scopes = lookup(each.value, "service_account_scopes", ["https://www.googleapis.com/auth/cloud-platform"])
 
   # Health check optionnel
   health_check_id = lookup(each.value, "health_check_id", null)
+
+  named_ports  = lookup(each.value, "named_ports", [])
+  network_tags = lookup(each.value, "network_tags", [])
+
+  depends_on = [module.service_accounts, module.secret_manager]
 }
 
 # ====================================
 # MODULE SA-IAM - VIA MAP ET FOR_EACH
 # ====================================
+# Crée des comptes de service et applique les rôles projet associés.
+
 module "service_accounts" {
   source   = "./modules/SA-IAM"
   for_each = var.service_accounts
@@ -102,7 +73,26 @@ module "service_accounts" {
   roles              = lookup(each.value, "roles", [])
 }
 
-# Module Secret Manager
+locals {
+  service_accounts_emails = {
+    for k, m in module.service_accounts :
+    k => m.email
+  }
+
+  # Mapping instance_key -> sa_key
+  instance_to_sa = {
+    backend  = "backend_sa"
+    frontend = "frontend_sa"
+    bastion  = "bastion_sa"
+  }
+
+  # Emails mappés pour les instances (lookup sûr avec fallback)
+  instance_sa_emails = {
+    for instance_key in keys(var.instance_groups) :
+    instance_key => lookup(local.service_accounts_emails, lookup(local.instance_to_sa, instance_key, ""), null)
+  }
+}
+
 module "secret_manager" {
   source = "./modules/secret-manager"
 
@@ -114,7 +104,7 @@ module "secret_manager" {
     db_name     = { secret_data = "app_database" }
   }
 
-  backend_service_account_email = google_service_account.backend_sa.email
+  backend_service_account_email = local.service_accounts_emails["backend_sa"]
 }
 
 # Module Cloud SQL
@@ -125,6 +115,7 @@ module "cloud_sql" {
   region         = var.region
   instance_name  = "mysql-instance"
   vpc_network_id = module.network["cloudsql"].vpc_id
+  tier           = var.tier
 
   db_password = "SuperSecurePassword123!"
 }
@@ -142,5 +133,5 @@ module "compute_backend" {
   cloud_sql_private_ip      = module.cloud_sql.private_ip_address
   secret_ids                = module.secret_manager.secret_ids
 
-  service_account_email = google_service_account.backend_sa.email
+  service_account_email = local.service_accounts_emails["backend_sa"]
 }

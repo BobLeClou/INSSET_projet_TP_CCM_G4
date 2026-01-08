@@ -21,7 +21,6 @@ instance_groups = {
     machine_type        = "e2-micro"
     source_image        = "debian-cloud/debian-11"
 
-    # Placeholders réseau à remplacer
     vpc_id        = "vpc-front"
     subnetwork_id = "subnet-front"
 
@@ -35,7 +34,6 @@ instance_groups = {
 				echo "Frontend instance ready" > /var/www/html/index.html
 			EOT
     }
-    service_account_email  = "A CHANGER-service-account-email"
     service_account_scopes = ["cloud-platform"]
   }
 
@@ -47,7 +45,6 @@ instance_groups = {
     machine_type        = "e2-micro"
     source_image        = "debian-cloud/debian-11"
 
-    # Placeholders réseau à remplacer
     vpc_id        = "vpc-back"
     subnetwork_id = "subnet-back"
 
@@ -69,7 +66,6 @@ instance_groups = {
     machine_type        = "e2-micro"
     source_image        = "debian-cloud/debian-11"
 
-    # Placeholders réseau à remplacer
     vpc_id        = "vpc-bastion"
     subnetwork_id = "subnet-bastion"
 
@@ -88,26 +84,7 @@ instance_groups = {
 # Service Accounts (exemples DEV)
 # ====================================
 service_accounts = {
-  sa-app = {
-    # Si omis, account_id = clé de la map (ici "sa-app")
-    account_id   = "sa-app"
-    display_name = "SA Application"
-    description  = "Compte de service pour l'application"
-    roles = [
-      "roles/storage.objectAdmin",
-      "roles/logging.logWriter"
-    ]
-  }
 
-  sa-ci = {
-    account_id   = "sa-ci"
-    display_name = "SA CI/CD"
-    description  = "Compte de service pour pipeline CI/CD"
-    roles = [
-      "roles/storage.admin",
-      "roles/iam.serviceAccountUser"
-    ]
-  }
 }
 
 # Déclaration des réseaux et sous-réseaux
