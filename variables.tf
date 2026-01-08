@@ -48,10 +48,10 @@ variable "service_accounts" {
 variable "networks" {
   description = "Configuration des VPC et sous-réseaux (bastion/frontend/backend)"
   type = map(object({
-    vpc_name                = string
-    vpc_description         = string
+    vpc_name                    = string
+    vpc_description             = string
     vpc_auto_create_subnetworks = bool
-    subnetwork_name         = string
-    subnetwork_ip_cidr_range = string
+    subnetwork_name             = string
+    subnetwork_ip_cidr_range    = string
   }))
 }

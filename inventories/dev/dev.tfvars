@@ -134,4 +134,4 @@ networks = {
 
 # Configuration du load-balancer
 proxy_subnet_ip_cidr_range = "10.0.6.0/24"
-firewall_proxy_prority = 1099
+firewall_proxy_prority     = 1099
