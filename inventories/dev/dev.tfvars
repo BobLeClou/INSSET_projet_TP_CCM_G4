@@ -1,32 +1,23 @@
-# ====================================
-# Configuration environnement DEV
-# ====================================
-
 # Projet et localisation GCP
 project_id = "g4-insset-projet-2025"
 region     = "europe-west1"
 zone       = "europe-west1-b"
 
 # ====================================
-# Groupes d'instances à créer (DEV)
-# ====================================
-# Le réseau est géré par une autre équipe.
-# Utilisez des placeholders explicites à remplacer ensuite.
 instance_groups = {
-	frontend = {
-		instance_group_name = "g4-insset-projet-2025-frontend-group"
-		base_instance_name  = "frontend"
-		zone                = "europe-west1-b"
-		target_size         = 3
-		machine_type        = "e2-micro"
-		source_image        = "debian-cloud/debian-11"
+  frontend = {
+    instance_group_name = "g4-insset-projet-2025-frontend-group"
+    base_instance_name  = "frontend"
+    zone                = "europe-west1-b"
+    target_size         = 3
+    machine_type        = "e2-micro"
+    source_image        = "debian-cloud/debian-11"
 
-		# Placeholders réseau à remplacer
-		vpc_id        = "vpc-front"
-		subnetwork_id = "subnet-front"
+    vpc_id        = "vpc-front"
+    subnetwork_id = "subnet-front"
 
-		metadata = {
-			startup-script = <<-EOT
+    metadata = {
+      startup-script = <<-EOT
 				#!/bin/bash
 				apt-get update
 				apt-get install -y nginx
@@ -34,70 +25,68 @@ instance_groups = {
 				systemctl enable nginx
 				echo "Frontend instance ready" > /var/www/html/index.html
 			EOT
-		}
-        service_account_scopes = ["cloud-platform"]
-	}
+    }
+    service_account_scopes = ["cloud-platform"]
+  }
 
-	backend = {
-		instance_group_name = "g4-insset-projet-2025-backend-group"
-		base_instance_name  = "backend"
-		zone                = "europe-west1-b"
-		target_size         = 3
-		machine_type        = "e2-micro"
-		source_image        = "debian-cloud/debian-11"
+  backend = {
+    instance_group_name = "g4-insset-projet-2025-backend-group"
+    base_instance_name  = "backend"
+    zone                = "europe-west1-b"
+    target_size         = 3
+    machine_type        = "e2-micro"
+    source_image        = "debian-cloud/debian-11"
 
-		# Placeholders réseau à remplacer
-		vpc_id        = "vpc-back"
-		subnetwork_id = "subnet-back"
+    vpc_id        = "vpc-back"
+    subnetwork_id = "subnet-back"
 
-		metadata = {
-			startup-script = <<-EOT
+    metadata = {
+      startup-script = <<-EOT
 				#!/bin/bash
 				apt-get update
 				apt-get install -y python3 python3-pip
 				echo "Backend instance ready" > /tmp/backend_ready.txt
 			EOT
-		}
-        service_account_scopes = ["cloud-platform"]
-	}
+    }
+    service_account_scopes = ["cloud-platform"]
+  }
 
-	bastion = {
-		instance_group_name = "g4-insset-projet-2025-bastion-group"
-		base_instance_name  = "bastion"
-		zone                = "europe-west1-b"
-		target_size         = 1
-		machine_type        = "e2-micro"
-		source_image        = "debian-cloud/debian-11"
+  bastion = {
+    instance_group_name = "g4-insset-projet-2025-bastion-group"
+    base_instance_name  = "bastion"
+    zone                = "europe-west1-b"
+    target_size         = 1
+    machine_type        = "e2-micro"
+    source_image        = "debian-cloud/debian-11"
 
-		# Placeholders réseau à remplacer
-		vpc_id        = "vpc-bastion"
-		subnetwork_id = "subnet-bastion"
+    vpc_id        = "vpc-bastion"
+    subnetwork_id = "subnet-bastion"
 
-		metadata = {
-			startup-script = <<-EOT
+    metadata = {
+      startup-script = <<-EOT
 				#!/bin/bash
 				apt-get update
 				apt-get install -y curl wget vim
 				echo "Bastion instance ready" > /tmp/bastion_ready.txt
 			EOT
-		}
-        service_account_scopes = ["cloud-platform"]
-	}
+    }
+    service_account_scopes = ["cloud-platform"]
+  }
 }
 
 # ====================================
 # Service Accounts (exemples DEV)
 # ====================================
 service_accounts = {
-    backend_sa = {
-        account_id   = "backend-service-account"
-        display_name = "Backend Service Account"
-        description  = "Compte de service pour les instances backend"
-        roles        = [
-            "roles/cloudsql.client",
-            "roles/secretmanager.secretAccessor"
-        ]
-    }
+  backend_sa = {
+    account_id   = "backend-service-account"
+    display_name = "Backend Service Account"
+    description  = "Compte de service pour les instances backend"
+    roles = [
+      "roles/cloudsql.client",
+      "roles/secretmanager.secretAccessor"
+    ]
+  }
 }
 
 # Déclaration des réseaux et sous-réseaux

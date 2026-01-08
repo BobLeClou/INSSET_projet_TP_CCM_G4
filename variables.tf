@@ -2,27 +2,17 @@ variable "project_id" {
   description = "The GCP project ID"
   type        = string
 }
+
 variable "region" {
-  description = "The GCP region"
+  description = "Région GCP pour les ressources"
   type        = string
-}
-variable "zone" {
-  description = "The GCP zone"
-  type        = string
-    description = "ID du projet GCP"
-    type        = string  
-    default = "g4-insset-projet-2025"
-}
-variable "region" {
-    description = "Région GCP pour les ressources"
-    type        = string  
-    default = "europe-west1"
+  default     = "europe-west1"
 }
 
 variable "zone" {
-    description = "Zone GCP pour les ressources"
-    type        = string  
-    default = "europe-west1-b"
+  description = "Zone GCP pour les ressources"
+  type        = string
+  default     = "europe-west1-b"
 }
 
 variable "instance_groups" {
@@ -41,22 +31,9 @@ variable "instance_groups" {
     })
     service_account_scopes = list(string)
   }))
-    default = {}
+  default = {}
 }
 
-# ====================================
-# Service Accounts + IAM (map pour for_each)
-# ====================================
-# Permet de définir plusieurs comptes de service et leurs rôles projet.
-# Exemple de structure dans un tfvars:
-# service_accounts = {
-#   sa-app = {
-#     account_id   = "sa-app"
-#     display_name = "SA Application"
-#     description  = "Compte de service pour l'app"
-#     roles        = ["roles/storage.objectAdmin", "roles/logging.logWriter"]
-#   }
-# }
 variable "service_accounts" {
   description = "Map des Service Accounts à créer et rôles à appliquer"
   type = map(object({
@@ -69,6 +46,12 @@ variable "service_accounts" {
 }
 
 variable "networks" {
-  description = "La déclaration des réseaux"
-  type        = map(any)
+  description = "Configuration des VPC et sous-réseaux (bastion/frontend/backend)"
+  type = map(object({
+    vpc_name                = string
+    vpc_description         = string
+    vpc_auto_create_subnetworks = bool
+    subnetwork_name         = string
+    subnetwork_ip_cidr_range = string
+  }))
 }

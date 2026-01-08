@@ -8,21 +8,21 @@
 # Il est conçu pour être appelé via for_each depuis le module racine.
 
 resource "google_service_account" "sa" {
-	
-	project      = var.project_id
-	account_id   = var.service_account_id
-	display_name = coalesce(var.display_name, var.service_account_id)
-	description  = var.description
+
+  project      = var.project_id
+  account_id   = var.service_account_id
+  display_name = coalesce(var.display_name, var.service_account_id)
+  description  = var.description
 }
 
 # Liaisons IAM au niveau projet pour le SA
 # Utilisation de google_project_iam_member (non autoritatives) pour éviter
 # d'écraser des bindings existants gérés ailleurs.
 resource "google_project_iam_member" "sa_roles" {
-	for_each = toset(var.roles)
+  for_each = toset(var.roles)
 
-	project = var.project_id
-	role    = each.value
-	member  = "serviceAccount:${google_service_account.sa.email}"
+  project = var.project_id
+  role    = each.value
+  member  = "serviceAccount:${google_service_account.sa.email}"
 }
 
