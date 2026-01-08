@@ -1,27 +1,4 @@
 # ====================================
-# BUCKETS GCS
-# ====================================
-
-# Bucket GCS pour stocker l'état Terraform
-# Ce bucket hébergera le fichier tfstate après le premier apply
-resource "google_storage_bucket" "terraform_state" {
-  name          = "${var.project_id}-tfstate"
-  project       = var.project_id
-  location      = var.region
-  force_destroy = false
-
-  # Active le versioning pour garder l'historique des états
-  versioning {
-    enabled = true
-  }
-  # Protection contre la suppression accidentelle
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
-
-# ====================================
 module "network" {
   source   = "./modules/network"
   for_each = var.networks
@@ -42,6 +19,7 @@ module "network" {
 # On délègue le réseau à une autre équipe.
 # Ici, on utilise des placeholders explicites "A CHANGER-..."
 # et on instancie le module instances pour chaque entrée de var.instance_groups.
+
 
 module "instances_groups" {
   source   = "./modules/instances"
@@ -67,11 +45,14 @@ module "instances_groups" {
   metadata = lookup(each.value, "metadata", {})
 
   # Compte de service
-  service_account_email  = local.service_accounts_emails[each.key]
+  service_account_email  = local.instance_sa_emails[each.key]
   service_account_scopes = lookup(each.value, "service_account_scopes", ["https://www.googleapis.com/auth/cloud-platform"])
 
   # Health check optionnel
   health_check_id = lookup(each.value, "health_check_id", null)
+
+  named_port = var.named_port
+  network_tags = var.network_tags
 
   depends_on = [module.service_accounts, module.secret_manager]
 }
@@ -97,6 +78,19 @@ locals {
     for k, m in module.service_accounts :
     k => m.email
   }
+  
+  # Mapping instance_key -> sa_key
+  instance_to_sa = {
+    backend  = "backend_sa"
+    frontend = "frontend_sa"
+    bastion  = "bastion_sa"
+  }
+  
+  # Emails mappés pour les instances (lookup sûr avec fallback)
+  instance_sa_emails = {
+    for instance_key in keys(var.instance_groups) :
+    instance_key => lookup(local.service_accounts_emails, lookup(local.instance_to_sa, instance_key, ""), null)
+  }
 }
 
 module "secret_manager" {
@@ -121,6 +115,7 @@ module "cloud_sql" {
   region         = var.region
   instance_name  = "mysql-instance"
   vpc_network_id = module.network["cloudsql"].vpc_id
+  tier = var.tier
 
   db_password = "SuperSecurePassword123!"
 }

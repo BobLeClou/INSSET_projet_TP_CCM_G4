@@ -80,3 +80,16 @@ variable "health_check_id" {
   type        = string
   default     = null
 }
+
+variable "named_port" {
+  description = "Configuration du named port pour le groupe d'instances"
+  type = object({
+    name = string
+    port = number
+  })  
+}
+variable "network_tags" {
+  description = "Tags réseau à appliquer aux instances"
+  type        = list(string)
+  default     = []
+}
