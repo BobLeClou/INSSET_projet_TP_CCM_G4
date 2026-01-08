@@ -144,6 +144,7 @@ module "load_balancer" {
   proxy_subnet_network       = module.network["front"].vpc_id
   allow_proxy_target_tags    = var.allow_proxy_target_tags
   firewall_proxy_prority     = var.firewall_proxy_prority
+  lb_backend_service_group   = module.instances_groups["frontend"].instance_group_self_link
 
   depends_on = [module.network, module.instances_groups]
 }
