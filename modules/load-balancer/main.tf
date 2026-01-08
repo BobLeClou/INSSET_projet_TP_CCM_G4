@@ -1,6 +1,6 @@
 #Subnetwork du proxy loadbalancer. /!\ DOIT ÊTRE SUR LE MÊME RÉSEAU QUE LES VM BACKEND VISÉS.
 resource "google_compute_subnetwork" "proxy_subnet" {
-  name          = "proxy-subnet"
+  name          = var.proxy_subnet_name
   ip_cidr_range = var.proxy_subnet_ip_cidr_range
   network       = var.proxy_subnet_network
   purpose       = "REGIONAL_MANAGED_PROXY"
@@ -9,7 +9,7 @@ resource "google_compute_subnetwork" "proxy_subnet" {
 
 #Règle de pare-feu permettant de communiquer avec les services de healthcheck Google Cloud
 resource "google_compute_firewall" "fw_health_check" {
-  name = "fw-allow-health-check"
+  name = var.fw_health_check_name
   allow {
     protocol = "tcp"
   }
@@ -22,7 +22,7 @@ resource "google_compute_firewall" "fw_health_check" {
 
 #Règle de pare-feu reliant le proxy aux VM
 resource "google_compute_firewall" "allow_proxy" {
-  name = "fw-allow-proxies"
+  name = var.allow_proxy_name
   allow {
     ports    = ["443"]
     protocol = "tcp"
@@ -44,14 +44,14 @@ resource "google_compute_firewall" "allow_proxy" {
 
 #IP statique réservée au load balancer
 resource "google_compute_address" "static_ip_load_balancer" {
-  name         = "address-name-load-balancer"
+  name         = var.static_ip_load_balancer_name
   address_type = "EXTERNAL"
   network_tier = "STANDARD"
 }
 
 #Health check, se charge de vérifier la disponibilité des VMs du backend
 resource "google_compute_region_health_check" "lb_health_check" {
-  name               = "l7-xlb-basic-check"
+  name               = var.lb_health_check_name
   check_interval_sec = 5
   healthy_threshold  = 2
   http_health_check {
@@ -65,19 +65,19 @@ resource "google_compute_region_health_check" "lb_health_check" {
 
 #URL Map pour redistribuer la requête vers la bonne VM
 resource "google_compute_region_url_map" "lb_url_map" {
-  name            = "regional-l7-xlb-map"
+  name            = var.lb_url_map
   default_service = google_compute_region_backend_service.lb_health_check.id
 }
 
 #Proxy HTTP
 resource "google_compute_region_target_http_proxy" "lb_http_proxy" {
-  name    = "l7-xlb-proxy"
+  name    = var.lb_http_proxy_name
   url_map = google_compute_region_url_map.lb_url_map.id
 }
 
 #Règle de renvoi de la requête
 resource "google_compute_forwarding_rule" "lb_forwarding_rule" {
-  name       = "l7-xlb-forwarding-rule"
+  name       = var.lb_forwarding_rule_name
   depends_on = [google_compute_subnetwork.proxy_subnet]
 
   ip_protocol           = "TCP"
