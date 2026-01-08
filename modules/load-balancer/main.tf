@@ -1,8 +1,8 @@
 #Subnetwork du proxy loadbalancer. /!\ DOIT ÊTRE SUR LE MÊME RÉSEAU QUE LES VM BACKEND VISÉS.
 resource "google_compute_subnetwork" "proxy_subnet" {
   name          = "proxy-subnet"
-  ip_cidr_range = "10.129.0.0/23"
-  network       = google_compute_network.default.id
+  ip_cidr_range = var.proxy_subnet_ip_cidr_range
+  network       = var.proxy_subnet_network
   purpose       = "REGIONAL_MANAGED_PROXY"
   role          = "ACTIVE"
 }
@@ -36,9 +36,9 @@ resource "google_compute_firewall" "allow_proxy" {
     protocol = "tcp"
   }
   direction     = "INGRESS"
-  network       = google_compute_network.default.id
-  priority      = 1000
-  source_ranges = ["10.129.0.0/23"]
+  network       = var.proxy_subnet_network
+  priority      = var.firewall_proxy_prority
+  source_ranges = [var.proxy_subnet_ip_cidr_range]
   target_tags   = ["load-balanced-backend"]
 }
 
@@ -63,20 +63,22 @@ resource "google_compute_region_health_check" "lb_health_check" {
   unhealthy_threshold = 2
 }
 
+#URL Map pour redistribuer la requête vers la bonne VM
 resource "google_compute_region_url_map" "lb_url_map" {
   name            = "regional-l7-xlb-map"
   default_service = google_compute_region_backend_service.lb_health_check.id
 }
 
+#Proxy HTTP
 resource "google_compute_region_target_http_proxy" "lb_http_proxy" {
   name    = "l7-xlb-proxy"
   url_map = google_compute_region_url_map.lb_url_map.id
 }
 
+#Règle de renvoi de la requête
 resource "google_compute_forwarding_rule" "lb_forwarding_rule" {
   name       = "l7-xlb-forwarding-rule"
-  depends_on = [google_compute_subnetwork.proxy_only]
-  region     = "us-west1"
+  depends_on = [google_compute_subnetwork.proxy_subnet]
 
   ip_protocol           = "TCP"
   load_balancing_scheme = "EXTERNAL_MANAGED"
