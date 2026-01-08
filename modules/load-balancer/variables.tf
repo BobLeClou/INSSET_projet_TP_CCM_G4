@@ -1,13 +1,13 @@
 # ---------------------------
 # --- NOMS DES RESSOURCES ---
 # ---------------------------
-variable proxy_subnet_name {
+variable "proxy_subnet_name" {
   type        = string
   default     = "proxy-subnet"
   description = "Nom du proxy du subnet"
 }
 
-variable fw_health_check_name {
+variable "fw_health_check_name" {
   type        = string
   default     = "fw-allow-health-check"
   description = "Nom de la règle firewall du health check"
@@ -19,31 +19,31 @@ variable "allow_proxy_name" {
   description = "Nom de la règle firewall du proxy"
 }
 
-variable static_ip_load_balancer_name {
+variable "static_ip_load_balancer_name" {
   type        = string
   default     = "address-name-load-balancer"
   description = "Nom de l'attribution d'ip statique du proxy"
 }
 
-variable lb_health_check_name {
+variable "lb_health_check_name" {
   type        = string
   default     = "l7-xlb-basic-check"
   description = "Nom du health check"
 }
 
-variable lb_url_map_name {
+variable "lb_url_map_name" {
   type        = string
   default     = "regional-l7-xlb-map"
   description = "Nom du health check"
 }
 
-variable lb_http_proxy_name {
-  type = string
-  default = "l7-xlb-proxy"
+variable "lb_http_proxy_name" {
+  type        = string
+  default     = "l7-xlb-proxy"
   description = "Nom du proxy http"
 }
 
-variable lb_forwarding_rule_name {
+variable "lb_forwarding_rule_name" {
   type        = string
   default     = "l7-xlb-forwarding-rule"
   description = "Nom de la règle de renvoi"
@@ -52,23 +52,23 @@ variable lb_forwarding_rule_name {
 # ------------------------
 # --- AUTRES VARIABLES ---
 # ------------------------
-variable proxy_subnet_ip_cidr_range {
+variable "proxy_subnet_ip_cidr_range" {
   type        = string
   description = "La plage d'adresse du sous-réseau des proxies"
 }
 
-variable proxy_subnet_network {
+variable "proxy_subnet_network" {
   type        = string
   description = "L'id du réseau dont fait partie le backend et le proxy"
 }
 
-variable allow_proxy_target_tags {
-  type        = list
+variable "allow_proxy_target_tags" {
+  type        = list(any)
   default     = []
   description = "description"
 }
 
-variable firewall_proxy_prority {
+variable "firewall_proxy_prority" {
   type        = number
   description = "La priorité des règles liés au proxy"
 }
