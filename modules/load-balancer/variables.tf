@@ -19,13 +19,6 @@ variable "allow_proxy_name" {
   description = "Nom de la règle firewall du proxy"
 }
 
-variable allow_proxy_target_tags {
-  type        = list
-  default     = []
-  description = "description"
-}
-
-
 variable static_ip_load_balancer_name {
   type        = string
   default     = "address-name-load-balancer"
@@ -67,6 +60,12 @@ variable proxy_subnet_ip_cidr_range {
 variable proxy_subnet_network {
   type        = string
   description = "L'id du réseau dont fait partie le backend et le proxy"
+}
+
+variable allow_proxy_target_tags {
+  type        = list
+  default     = []
+  description = "description"
 }
 
 variable firewall_proxy_prority {
