@@ -173,5 +173,9 @@ networks = {
 
 # Configuration du load-balancer
 proxy_subnet_ip_cidr_range = "10.0.6.0/24"
+<<<<<<< HEAD
 firewall_proxy_prority     = 1099
 allow_proxy_target_tags    = ["frontend"]
+=======
+firewall_proxy_prority = 1099
+>>>>>>> dfd3e95 (Ajout dans le main.tf du load balancer et variables associees)
