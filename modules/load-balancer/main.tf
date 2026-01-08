@@ -14,7 +14,7 @@ resource "google_compute_firewall" "fw_health_check" {
     protocol = "tcp"
   }
   direction     = "INGRESS"
-  network       = google_compute_network.default.id
+  network       = var.proxy_subnet_network
   priority      = 1000
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   target_tags   = ["load-balanced-backend"]
@@ -63,10 +63,25 @@ resource "google_compute_region_health_check" "lb_health_check" {
   unhealthy_threshold = 2
 }
 
+resource "google_compute_region_backend_service" "lb_backend_service" {
+  name                  = var.lb_backend_service_name
+  region                = "us-west1"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
+  health_checks         = [google_compute_region_health_check.lb_health_check.id]
+  protocol              = "HTTP"
+  session_affinity      = "NONE"
+  timeout_sec           = 30
+  backend {
+    group           = var.lb_backend_service_group
+    balancing_mode  = "UTILIZATION"
+    capacity_scaler = 1.0
+  }
+}
+
 #URL Map pour redistribuer la requête vers la bonne VM
 resource "google_compute_region_url_map" "lb_url_map" {
-  name            = var.lb_url_map
-  default_service = google_compute_region_backend_service.lb_health_check.id
+  name            = var.lb_url_map_name
+  default_service = google_compute_region_backend_service.lb_backend_service.id
 }
 
 #Proxy HTTP
@@ -84,7 +99,7 @@ resource "google_compute_forwarding_rule" "lb_forwarding_rule" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   port_range            = "80"
   target                = google_compute_region_target_http_proxy.lb_http_proxy.id
-  network               = google_compute_network.default.id
+  network               = var.proxy_subnet_network
   ip_address            = google_compute_address.static_ip_load_balancer.id
   network_tier          = "STANDARD"
 }

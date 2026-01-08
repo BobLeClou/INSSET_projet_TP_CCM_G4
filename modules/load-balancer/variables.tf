@@ -25,6 +25,12 @@ variable "static_ip_load_balancer_name" {
   description = "Nom de l'attribution d'ip statique du proxy"
 }
 
+variable "lb_backend_service_name" {
+  type        = string
+  default     = "l7-xlb-backend-service"
+  description = "Nom du service backend"
+}
+
 variable "lb_health_check_name" {
   type        = string
   default     = "l7-xlb-basic-check"
@@ -34,7 +40,7 @@ variable "lb_health_check_name" {
 variable "lb_url_map_name" {
   type        = string
   default     = "regional-l7-xlb-map"
-  description = "Nom du health check"
+  description = "Nom du plan d'URL"
 }
 
 variable "lb_http_proxy_name" {
@@ -71,4 +77,9 @@ variable "allow_proxy_target_tags" {
 variable "firewall_proxy_prority" {
   type        = number
   description = "La priorité des règles liés au proxy"
+}
+
+variable "lb_backend_service_group" {
+  type        = string
+  description = "La valeur 'instance_group' du group manager supervisé"
 }
