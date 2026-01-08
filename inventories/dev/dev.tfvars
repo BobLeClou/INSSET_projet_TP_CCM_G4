@@ -17,10 +17,9 @@ instance_groups = {
 
     vpc_id        = "vpc-front"
     subnetwork_id = "subnet-front"
-    named_port = {
-      name = "http"
-      port = 80
-    }
+    named_ports = [
+      { name = "http", ports = 80 }
+    ]
     network_tags = ["frontend"]
 
     metadata = {
@@ -46,8 +45,8 @@ instance_groups = {
 
     vpc_id        = "vpc-back"
     subnetwork_id = "subnet-back"
-    named_port = {}
-    network_tags = null
+    named_ports   = []
+    network_tags  = null
 
     metadata = {
       startup-script = <<-EOT
@@ -71,7 +70,7 @@ instance_groups = {
     vpc_id        = "vpc-bastion"
     subnetwork_id = "subnet-bastion"
 
-    named_port = {}
+    named_ports  = []
     network_tags = null
 
     metadata = {

@@ -48,28 +48,30 @@ variable "service_accounts" {
 variable "networks" {
   description = "Configuration des VPC et sous-réseaux (bastion/frontend/backend)"
   type = map(object({
-    vpc_name                = string
-    vpc_description         = string
+    vpc_name                    = string
+    vpc_description             = string
     vpc_auto_create_subnetworks = bool
-    subnetwork_name         = string
-    subnetwork_ip_cidr_range = string
+    subnetwork_name             = string
+    subnetwork_ip_cidr_range    = string
   }))
 }
 
 variable "tier" {
   description = "The machine tier for Cloud SQL instance"
-  type        = string  
+  type        = string
 }
 
-variable "named_port" {
-  description = "Configuration du named port pour le groupe d'instances"
-  type = object({
-    name = string
-    port = number
-  })  
-}
 variable "network_tags" {
-  description = "Tags réseau à appliquer aux instances"
+  description = "Liste des tags réseau à appliquer aux instances"
   type        = list(string)
   default     = []
+}
+
+variable "named_ports" {
+  description = "Liste des ports nommés à configurer pour les groupes d'instances"
+  type = list(object({
+    name  = string
+    ports = number
+  }))
+  default = []
 }

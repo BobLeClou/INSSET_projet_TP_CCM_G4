@@ -51,8 +51,8 @@ module "instances_groups" {
   # Health check optionnel
   health_check_id = lookup(each.value, "health_check_id", null)
 
-  named_port = var.named_port
-  network_tags = var.network_tags
+  named_ports  = lookup(each.value, "named_ports", [])
+  network_tags = lookup(each.value, "network_tags", [])
 
   depends_on = [module.service_accounts, module.secret_manager]
 }
@@ -78,14 +78,14 @@ locals {
     for k, m in module.service_accounts :
     k => m.email
   }
-  
+
   # Mapping instance_key -> sa_key
   instance_to_sa = {
     backend  = "backend_sa"
     frontend = "frontend_sa"
     bastion  = "bastion_sa"
   }
-  
+
   # Emails mappés pour les instances (lookup sûr avec fallback)
   instance_sa_emails = {
     for instance_key in keys(var.instance_groups) :
@@ -115,7 +115,7 @@ module "cloud_sql" {
   region         = var.region
   instance_name  = "mysql-instance"
   vpc_network_id = module.network["cloudsql"].vpc_id
-  tier = var.tier
+  tier           = var.tier
 
   db_password = "SuperSecurePassword123!"
 }

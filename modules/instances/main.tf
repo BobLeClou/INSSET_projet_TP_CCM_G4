@@ -3,16 +3,16 @@ resource "google_compute_instance_template" "default" {
   description = "Instance template for managed instance group"
 
   machine_type = var.machine_type
-  
+
   disk {
-    source_image = var.source_image 
-    auto_delete  = true            
-    boot         = true             
+    source_image = var.source_image
+    auto_delete  = true
+    boot         = true
   }
 
   network_interface {
-    network    = var.vpc_id        
-    subnetwork = var.subnetwork_id 
+    network    = var.vpc_id
+    subnetwork = var.subnetwork_id
   }
 
   metadata = var.metadata
@@ -33,9 +33,10 @@ resource "google_compute_instance_group_manager" "default" {
   base_instance_name = var.base_instance_name # Préfixe du nom des instances
   zone               = var.zone
   target_size        = var.target_size # Nombre d'instances à maintenir
+
   named_port {
-    name = var.named_port.name
-    port = var.named_port.port
+    name = length(var.named_ports) > 0 ? var.named_ports[0].name : "dummy"
+    port = length(var.named_ports) > 0 ? var.named_ports[0].ports : 65534
   }
 
   # Version du template à utiliser
