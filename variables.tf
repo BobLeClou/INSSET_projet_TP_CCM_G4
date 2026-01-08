@@ -136,6 +136,8 @@ variable "firewall_direction" {
   description = "Direction of the firewall rule (INGRESS(entry) or EGRESS(sortie))"
   type        = string
   default     = "INGRESS"
+}
+
 #Load balancer
 variable "proxy_subnet_ip_cidr_range" {
   type        = string
