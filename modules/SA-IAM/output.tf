@@ -7,9 +7,9 @@ output "service_account_email" {
   value       = google_service_account.sa.email
 }
 
-output "email" {
-  description = "Email du service account"
-  value       = google_service_account.sa.email
+output "service_account_unique_id" {
+  description = "Unique ID du Service Account"
+  value       = google_service_account.sa.unique_id
 }
 
 

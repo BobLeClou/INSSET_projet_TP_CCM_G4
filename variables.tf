@@ -1,6 +1,7 @@
 variable "project_id" {
-  description = "The GCP project ID"
+  description = "ID du projet GCP"
   type        = string
+  default     = "g4-insset-projet-2025"
 }
 
 variable "region" {
@@ -18,18 +19,18 @@ variable "zone" {
 variable "instance_groups" {
   description = "Configuration des groupes d'instances à créer"
   type = map(object({
-    instance_group_name = string
-    base_instance_name  = string
-    zone                = string
-    target_size         = number
-    machine_type        = string
-    source_image        = string
-    vpc_id              = string
-    subnetwork_id       = string
-    metadata = object({
-      startup-script = string
-    })
-    service_account_scopes = list(string)
+    instance_group_name    = optional(string)
+    base_instance_name     = optional(string)
+    zone                   = optional(string)
+    target_size            = optional(number)
+    machine_type           = optional(string)
+    source_image           = optional(string)
+    vpc_id                 = optional(string)
+    subnetwork_id          = optional(string)
+    metadata               = optional(map(string))
+    service_account_email  = optional(list(string))
+    service_account_scopes = optional(list(string))
+    health_check_id        = optional(string)
   }))
   default = {}
 }

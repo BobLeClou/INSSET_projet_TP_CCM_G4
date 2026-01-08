@@ -89,6 +89,7 @@ instance_groups = {
 # Service Accounts (exemples DEV)
 # ====================================
 service_accounts = {
+
   backend_sa = {
     account_id   = "backend-service-account"
     display_name = "Backend Service Account"
