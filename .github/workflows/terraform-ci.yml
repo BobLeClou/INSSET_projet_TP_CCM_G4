@@ -2,9 +2,6 @@ name: Terraform Format Check
 
 on:
   pull_request:
-    paths:
-      - '**.tf'
-      - '**.tfvars'
 
 jobs:
   terraform-fmt:
