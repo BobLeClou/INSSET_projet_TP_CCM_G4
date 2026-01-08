@@ -75,7 +75,8 @@ variable "named_ports" {
     ports = number
   }))
   default = []
-  
+}
+
 #Load balancer
 variable "proxy_subnet_ip_cidr_range" {
   type        = string
