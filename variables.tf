@@ -29,6 +29,7 @@ variable "instance_groups" {
     metadata = object({
       startup-script = string
     })
+    service_account_scopes = list(string)
   }))
     default = {}
 }

@@ -8,7 +8,8 @@
 # Il est conçu pour être appelé via for_each depuis le module racine.
 
 resource "google_service_account" "sa" {
-	# account_id: identifiant court (sans domaine)
+	
+	project      = var.project_id
 	account_id   = var.service_account_id
 	display_name = coalesce(var.display_name, var.service_account_id)
 	description  = var.description
