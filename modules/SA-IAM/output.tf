@@ -12,6 +12,7 @@ output "service_account_unique_id" {
   value       = google_service_account.sa.unique_id
 }
 
+
 output "applied_roles" {
   description = "Rôles IAM appliqués au SA (niveau projet)"
   value       = [for r in google_project_iam_member.sa_roles : r.role]

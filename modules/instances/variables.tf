@@ -80,3 +80,16 @@ variable "health_check_id" {
   type        = string
   default     = null
 }
+
+variable "named_ports" {
+  type = list(object({
+    name  = string
+    ports = number
+  }))
+  default = []
+}
+variable "network_tags" {
+  description = "Liste des tags réseau à appliquer aux instances"
+  type        = list(string)
+  default     = []
+}

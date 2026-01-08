@@ -1,17 +1,11 @@
-# ====================================
-# Configuration environnement DEV
-# ====================================
-
 # Projet et localisation GCP
 project_id = "g4-insset-projet-2025"
 region     = "europe-west1"
 zone       = "europe-west1-b"
+tier       = "db-n1-standard-1"
+
 
 # ====================================
-# Groupes d'instances à créer (DEV)
-# ====================================
-# Le réseau est géré par une autre équipe.
-# Utilisez des placeholders explicites à remplacer ensuite.
 instance_groups = {
   frontend = {
     instance_group_name = "g4-insset-projet-2025-frontend-group"
@@ -23,6 +17,10 @@ instance_groups = {
 
     vpc_id        = "vpc-front"
     subnetwork_id = "subnet-front"
+    named_ports = [
+      { name = "http", ports = 80 }
+    ]
+    network_tags = ["frontend"]
 
     metadata = {
       startup-script = <<-EOT
@@ -47,6 +45,8 @@ instance_groups = {
 
     vpc_id        = "vpc-back"
     subnetwork_id = "subnet-back"
+    named_ports   = []
+    network_tags  = null
 
     metadata = {
       startup-script = <<-EOT
@@ -56,6 +56,7 @@ instance_groups = {
 				echo "Backend instance ready" > /tmp/backend_ready.txt
 			EOT
     }
+    service_account_scopes = ["cloud-platform"]
   }
 
   bastion = {
@@ -69,6 +70,9 @@ instance_groups = {
     vpc_id        = "vpc-bastion"
     subnetwork_id = "subnet-bastion"
 
+    named_ports  = []
+    network_tags = null
+
     metadata = {
       startup-script = <<-EOT
 				#!/bin/bash
@@ -77,6 +81,7 @@ instance_groups = {
 				echo "Bastion instance ready" > /tmp/bastion_ready.txt
 			EOT
     }
+    service_account_scopes = ["cloud-platform"]
   }
 }
 
@@ -85,6 +90,42 @@ instance_groups = {
 # ====================================
 service_accounts = {
 
+  backend_sa = {
+    account_id   = "backend-service-account"
+    display_name = "Backend Service Account"
+    description  = "Compte de service pour les instances backend"
+    roles = [
+      "roles/cloudsql.client",
+      "roles/secretmanager.secretAccessor"
+    ]
+  }
+  bastion_sa = {
+    account_id   = "bastion-service-account"
+    display_name = "Bastion Service Account"
+    description  = "Compte de service pour les instances bastion"
+    roles = [
+      "roles/logging.logWriter"
+    ]
+  }
+  frontend_sa = {
+    account_id   = "frontend-service-account"
+    display_name = "Frontend Service Account"
+    description  = "Compte de service pour les instances frontend"
+    roles = [
+      "roles/logging.logWriter",
+      "roles/monitoring.metricWriter"
+    ]
+  }
+  manager_sa = {
+    account_id   = "manager-service-account"
+    display_name = "Manager Service Account"
+    description  = "Compte de service pour l'administrateur"
+    roles = [
+      "roles/secretmanager.admin",
+      "roles/cloudsql.admin",
+      "roles/compute.instanceAdmin.v1"
+    ]
+  }
 }
 
 # Déclaration des réseaux et sous-réseaux
