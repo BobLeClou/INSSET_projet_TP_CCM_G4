@@ -1,9 +1,9 @@
-output vpc_id {
+output "vpc_id" {
   value       = google_compute_network.vpc_network.id
   description = "L'id du vpc créé"
 }
 
-output subnetwork_id {
+output "subnetwork_id" {
   value       = google_compute_subnetwork.subnetwork.id
   description = "L'id du subnetwork crée"
 }

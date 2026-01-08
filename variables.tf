@@ -1,4 +1,14 @@
 variable "project_id" {
+  description = "The GCP project ID"
+  type        = string
+}
+variable "region" {
+  description = "The GCP region"
+  type        = string
+}
+variable "zone" {
+  description = "The GCP zone"
+  type        = string
     description = "ID du projet GCP"
     type        = string  
     default = "g4-insset-projet-2025"
@@ -58,6 +68,6 @@ variable "service_accounts" {
 }
 
 variable "networks" {
-    description = "La déclaration des réseaux"
-    type        = map(any)
+  description = "La déclaration des réseaux"
+  type        = map(any)
 }
