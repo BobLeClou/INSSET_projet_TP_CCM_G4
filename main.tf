@@ -151,3 +151,54 @@ module "firewall" {
   firewall_direction     = lookup(each.value, "firewall_direction", "INGRESS")
 }
 
+#Module Load Balancer
+module "load_balancer" {
+  source = "./modules/load-balancer"
+
+  proxy_subnet_ip_cidr_range = var.proxy_subnet_ip_cidr_range
+  proxy_subnet_network       = module.network["front"].vpc_id
+  allow_proxy_target_tags    = var.allow_proxy_target_tags
+  firewall_proxy_prority     = var.firewall_proxy_prority
+  lb_backend_service_group   = module.instances_groups["frontend"].instance_group_self_link
+
+  depends_on = [module.network, module.instances_groups]
+}
+
+module "peering_front_back" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "front-to-back"
+  peering_name_b_to_a = "back-to-front"
+  
+  network_a_id = module.network["front"].vpc_id
+  network_b_id = module.network["back"].vpc_id
+  
+  export_custom_routes = true
+  import_custom_routes = true
+
+  depends_on = [module.network]
+}
+
+module "peering_back_cloudsql" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "back-to-cloudsql"
+  peering_name_b_to_a = "cloudsql-to-back"
+  
+  network_a_id = module.network["back"].vpc_id
+  network_b_id = module.network["cloudsql"].vpc_id
+
+  depends_on = [module.network]
+}
+
+module "peering_bastion_front" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "bastion-to-front"
+  peering_name_b_to_a = "front-to-bastion"
+  
+  network_a_id = module.network["bastion"].vpc_id
+  network_b_id = module.network["front"].vpc_id
+
+  depends_on = [module.network]
+}

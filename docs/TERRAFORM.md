@@ -21,7 +21,11 @@ No providers.
 | <a name="module_cloud_sql"></a> [cloud\_sql](#module\_cloud\_sql) | ./modules/cloud-sql | n/a |
 | <a name="module_compute_backend"></a> [compute\_backend](#module\_compute\_backend) | ./modules/compute-backend | n/a |
 | <a name="module_instances_groups"></a> [instances\_groups](#module\_instances\_groups) | ./modules/instances | n/a |
+| <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./modules/load-balancer | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
+| <a name="module_peering_back_cloudsql"></a> [peering\_back\_cloudsql](#module\_peering\_back\_cloudsql) | ./modules/vpc-peering | n/a |
+| <a name="module_peering_bastion_front"></a> [peering\_bastion\_front](#module\_peering\_bastion\_front) | ./modules/vpc-peering | n/a |
+| <a name="module_peering_front_back"></a> [peering\_front\_back](#module\_peering\_front\_back) | ./modules/vpc-peering | n/a |
 | <a name="module_secret_manager"></a> [secret\_manager](#module\_secret\_manager) | ./modules/secret-manager | n/a |
 | <a name="module_service_accounts"></a> [service\_accounts](#module\_service\_accounts) | ./modules/SA-IAM | n/a |
 
@@ -33,11 +37,14 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_allow_proxy_target_tags"></a> [allow\_proxy\_target\_tags](#input\_allow\_proxy\_target\_tags) | description | `list(any)` | `[]` | no |
+| <a name="input_firewall_proxy_prority"></a> [firewall\_proxy\_prority](#input\_firewall\_proxy\_prority) | La priorité des règles liés au proxy | `number` | n/a | yes |
 | <a name="input_instance_groups"></a> [instance\_groups](#input\_instance\_groups) | Configuration des groupes d'instances à créer | <pre>map(object({<br/>    instance_group_name    = optional(string)<br/>    base_instance_name     = optional(string)<br/>    zone                   = optional(string)<br/>    target_size            = optional(number)<br/>    machine_type           = optional(string)<br/>    source_image           = optional(string)<br/>    vpc_id                 = optional(string)<br/>    subnetwork_id          = optional(string)<br/>    metadata               = optional(map(string))<br/>    service_account_email  = optional(list(string))<br/>    service_account_scopes = optional(list(string))<br/>    health_check_id        = optional(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_named_ports"></a> [named\_ports](#input\_named\_ports) | Liste des ports nommés à configurer pour les groupes d'instances | <pre>list(object({<br/>    name  = string<br/>    ports = number<br/>  }))</pre> | `[]` | no |
 | <a name="input_network_tags"></a> [network\_tags](#input\_network\_tags) | Liste des tags réseau à appliquer aux instances | `list(string)` | `[]` | no |
 | <a name="input_networks"></a> [networks](#input\_networks) | Configuration des VPC et sous-réseaux (bastion/frontend/backend) | <pre>map(object({<br/>    vpc_name                    = string<br/>    vpc_description             = string<br/>    vpc_auto_create_subnetworks = bool<br/>    subnetwork_name             = string<br/>    subnetwork_ip_cidr_range    = string<br/>  }))</pre> | n/a | yes |
 | <a name="input_project_id"></a> [project\_id](#input\_project\_id) | ID du projet GCP | `string` | `"g4-insset-projet-2025"` | no |
+| <a name="input_proxy_subnet_ip_cidr_range"></a> [proxy\_subnet\_ip\_cidr\_range](#input\_proxy\_subnet\_ip\_cidr\_range) | La plage d'adresse du sous-réseau des proxies | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | Région GCP pour les ressources | `string` | `"europe-west1"` | no |
 | <a name="input_service_accounts"></a> [service\_accounts](#input\_service\_accounts) | Map des Service Accounts à créer et rôles à appliquer | <pre>map(object({<br/>    account_id   = optional(string)<br/>    display_name = optional(string)<br/>    description  = optional(string)<br/>    roles        = optional(list(string), [])<br/>  }))</pre> | `{}` | no |
 | <a name="input_tier"></a> [tier](#input\_tier) | The machine tier for Cloud SQL instance | `string` | n/a | yes |

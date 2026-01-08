@@ -192,7 +192,10 @@ source_ranges = ["VOTRE_IP/32"]  # Au lieu de 0.0.0.0/0
 
 ## 👥 Auteurs
 
-Groupe 4 - INSSET 2025
+Groupe 4 - INSSET 2025 :
+iSreaK - Julien,
+BobLeClou - Kerrian,
+ValentinDuval - Valentin
 
 ---
 
