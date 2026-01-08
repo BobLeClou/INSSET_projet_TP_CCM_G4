@@ -21,6 +21,7 @@ No providers.
 | <a name="module_cloud_sql"></a> [cloud\_sql](#module\_cloud\_sql) | ./modules/cloud-sql | n/a |
 | <a name="module_compute_backend"></a> [compute\_backend](#module\_compute\_backend) | ./modules/compute-backend | n/a |
 | <a name="module_dns"></a> [dns](#module\_dns) | ./modules/dns | n/a |
+| <a name="module_firewall"></a> [firewall](#module\_firewall) | ./modules/pare-feu | n/a |
 | <a name="module_instances_groups"></a> [instances\_groups](#module\_instances\_groups) | ./modules/instances | n/a |
 | <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./modules/load-balancer | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
@@ -40,7 +41,16 @@ No resources.
 |------|-------------|------|---------|:--------:|
 | <a name="input_allow_proxy_target_tags"></a> [allow\_proxy\_target\_tags](#input\_allow\_proxy\_target\_tags) | description | `list(any)` | `[]` | no |
 | <a name="input_dns_managed_zone_name"></a> [dns\_managed\_zone\_name](#input\_dns\_managed\_zone\_name) | Le nom de la zone DNS | `string` | n/a | yes |
+| <a name="input_firewall_direction"></a> [firewall\_direction](#input\_firewall\_direction) | Direction of the firewall rule (INGRESS(entry) or EGRESS(sortie)) | `string` | `"INGRESS"` | no |
+| <a name="input_firewall_name"></a> [firewall\_name](#input\_firewall\_name) | Name of the firewall rule | `string` | `null` | no |
+| <a name="input_firewall_network_name"></a> [firewall\_network\_name](#input\_firewall\_network\_name) | Name of the VPC network | `string` | `null` | no |
+| <a name="input_firewall_ports"></a> [firewall\_ports](#input\_firewall\_ports) | List of ports for the firewall rule | `list(number)` | `[]` | no |
+| <a name="input_firewall_priority"></a> [firewall\_priority](#input\_firewall\_priority) | Priority of the firewall rule (lower numbers = higher priority) | `number` | `1000` | no |
+| <a name="input_firewall_protocol"></a> [firewall\_protocol](#input\_firewall\_protocol) | Protocol for the firewall rule (tcp, udp, icmp, etc.) | `string` | `null` | no |
 | <a name="input_firewall_proxy_prority"></a> [firewall\_proxy\_prority](#input\_firewall\_proxy\_prority) | La priorité des règles liés au proxy | `number` | n/a | yes |
+| <a name="input_firewall_rules"></a> [firewall\_rules](#input\_firewall\_rules) | Map des règles de pare-feu à créer | <pre>map(object({<br/>    firewall_name          = string<br/>    firewall_network_name  = string<br/>    firewall_priority      = optional(number, 1000)<br/>    firewall_protocol      = string<br/>    firewall_ports         = optional(list(number), [])<br/>    firewall_source_ranges = list(string)<br/>    firewall_target_tags   = optional(list(string), [])<br/>  }))</pre> | `{}` | no |
+| <a name="input_firewall_source_ranges"></a> [firewall\_source\_ranges](#input\_firewall\_source\_ranges) | List of source CIDR ranges | `list(string)` | `[]` | no |
+| <a name="input_firewall_target_tags"></a> [firewall\_target\_tags](#input\_firewall\_target\_tags) | List of target tags for the firewall rule | `list(string)` | `[]` | no |
 | <a name="input_instance_groups"></a> [instance\_groups](#input\_instance\_groups) | Configuration des groupes d'instances à créer | <pre>map(object({<br/>    instance_group_name    = optional(string)<br/>    base_instance_name     = optional(string)<br/>    zone                   = optional(string)<br/>    target_size            = optional(number)<br/>    machine_type           = optional(string)<br/>    source_image           = optional(string)<br/>    vpc_id                 = optional(string)<br/>    subnetwork_id          = optional(string)<br/>    metadata               = optional(map(string))<br/>    service_account_email  = optional(list(string))<br/>    service_account_scopes = optional(list(string))<br/>    health_check_id        = optional(string)<br/>  }))</pre> | `{}` | no |
 | <a name="input_named_ports"></a> [named\_ports](#input\_named\_ports) | Liste des ports nommés à configurer pour les groupes d'instances | <pre>list(object({<br/>    name  = string<br/>    ports = number<br/>  }))</pre> | `[]` | no |
 | <a name="input_network_tags"></a> [network\_tags](#input\_network\_tags) | Liste des tags réseau à appliquer aux instances | `list(string)` | `[]` | no |

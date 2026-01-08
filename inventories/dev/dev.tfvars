@@ -171,6 +171,84 @@ networks = {
   }
 }
 
+firewall_rules = {
+  # Règles existantes (vpc-front pour LB)
+  fw-allow-proxies = {
+    firewall_name          = "fw-allow-proxies"
+    firewall_network_name  = "vpc-front"
+    firewall_priority      = 1099
+    firewall_protocol      = "tcp"
+    firewall_ports         = [80, 443, 8080]
+    firewall_source_ranges = ["10.0.6.0/24"]  # Proxy subnet LB
+    firewall_target_tags   = ["frontend"]
+    firewall_direction     = "INGRESS"
+  }
+  fw-allow-health-check = {
+    firewall_name          = "fw-allow-health-check"
+    firewall_network_name  = "vpc-front"
+    firewall_priority      = 1000
+    firewall_protocol      = "tcp"
+    firewall_ports         = []  # Port serving (healthcheck auto)
+    firewall_source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+    firewall_target_tags   = ["frontend"]
+    firewall_direction     = "INGRESS"
+  }
+
+  # Règles ingress proposées (internes)
+  fw-front-to-back = {
+    firewall_name          = "fw-front-to-back"
+    firewall_network_name  = "vpc-front"
+    firewall_priority      = 1100
+    firewall_protocol      = "tcp"
+    firewall_ports         = [8080]
+    firewall_source_ranges = ["10.0.2.0/24"]  # Subnet front
+    firewall_target_tags   = ["backend"]
+    firewall_direction     = "INGRESS"
+  }
+  fw-back-to-db = {
+    firewall_name          = "fw-back-to-db"
+    firewall_network_name  = "vpc-back"
+    firewall_priority      = 1101
+    firewall_protocol      = "tcp"
+    firewall_ports         = [3306]
+    firewall_source_ranges = ["10.0.3.0/24"]  # Subnet back
+    firewall_target_tags   = ["private"]
+    firewall_direction     = "INGRESS"
+  }
+  fw-bastion-to-back = {
+    firewall_name          = "fw-bastion-to-back"
+    firewall_network_name  = "vpc-bastion"
+    firewall_priority      = 1102
+    firewall_protocol      = "tcp"
+    firewall_ports         = [22, 8080]
+    firewall_source_ranges = ["10.0.1.0/24"]  # Subnet bastion
+    firewall_target_tags   = ["backend"]
+    firewall_direction     = "INGRESS"
+  }
+  fw-bastion-ssh = {
+    firewall_name          = "fw-bastion-ssh"
+    firewall_network_name  = "vpc-bastion"
+    firewall_priority      = 1103
+    firewall_protocol      = "tcp"
+    firewall_ports         = [22]
+    firewall_source_ranges = ["0.0.0.0/0"]  # Restreignez à IPs devs (ex. "82.64.0.0/18")
+    firewall_target_tags   = ["bastion"]
+    firewall_direction     = "INGRESS"
+  }
+
+  # Règles egress limitées (optionnel, default GCP=allow all)
+  fw-egress-back-updates = {
+    firewall_name          = "fw-egress-back-updates"
+    firewall_network_name  = "vpc-back"
+    firewall_priority      = 1000
+    firewall_protocol      = "tcp"
+    firewall_ports         = [443, 80]
+    firewall_source_ranges = ["10.0.3.0/24"]
+    firewall_target_tags   = []  # Applique à toute VM back
+    firewall_direction     = "EGRESS"
+  }
+}
+
 # Configuration du load-balancer
 proxy_subnet_ip_cidr_range = "10.0.6.0/24"
 firewall_proxy_prority     = 1099
