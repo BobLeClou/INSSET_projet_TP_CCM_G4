@@ -137,15 +137,14 @@ module "compute_backend" {
 }
 
 #Module Load Balancer
-resource "google_compute_forwarding_rule" "lb_forwarding_rule" {
-  name       = var.lb_forwarding_rule_name
-  depends_on = [google_compute_subnetwork.proxy_subnet]
+module "load_balancer" {
+  source = "./modules/load-balancer"
 
-  ip_protocol           = "TCP"
-  load_balancing_scheme = "EXTERNAL_MANAGED"
-  port_range            = "80"
-  target                = google_compute_region_target_http_proxy.lb_http_proxy.id
-  network               = var.proxy_subnet_network
-  ip_address            = google_compute_address.static_ip_load_balancer.id
-  network_tier          = "STANDARD"
+  proxy_subnet_ip_cidr_range = var.proxy_subnet_ip_cidr_range
+  proxy_subnet_network       = module.network["front"].vpc_id
+  allow_proxy_target_tags    = var.allow_proxy_target_tags
+  firewall_proxy_prority     = var.firewall_proxy_prority
+  lb_backend_service_group   = module.instances_groups["frontend"].instance_group_self_link
+
+  depends_on = [module.network, module.instances_groups]
 }
