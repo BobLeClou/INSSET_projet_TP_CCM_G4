@@ -6,6 +6,6 @@ output "instance_group_names" {
 output "service_accounts_emails" {
   description = "Emails des service accounts par clé"
   value = {
-    for k, m in module.service_accounts : k => m.email
+    for k, m in module.service_accounts : k => m.service_account_email
   }
 }

@@ -76,7 +76,7 @@ module "service_accounts" {
 locals {
   service_accounts_emails = {
     for k, m in module.service_accounts :
-    k => m.email
+    k => m.service_account_email
   }
 
   # Mapping instance_key -> sa_key
