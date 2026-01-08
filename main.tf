@@ -164,6 +164,13 @@ module "load_balancer" {
   depends_on = [module.network, module.instances_groups]
 }
 
+#Module DNS
+module "dns" {
+  source = "./modules/dns"
+
+  dns_managed_zone_name = var.dns_managed_zone_name
+  ip_load_balancer      = module.load_balancer.lb_ip_address
+}
 module "peering_front_back" {
   source = "./modules/vpc-peering"
 

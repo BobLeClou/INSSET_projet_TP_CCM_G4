@@ -253,3 +253,6 @@ firewall_rules = {
 proxy_subnet_ip_cidr_range = "10.0.6.0/24"
 firewall_proxy_prority     = 1099
 allow_proxy_target_tags    = ["frontend"]
+
+# Configuration du DNS
+dns_managed_zone_name = "dns-zone-load-balancer"

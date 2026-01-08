@@ -20,6 +20,7 @@ No providers.
 |------|--------|---------|
 | <a name="module_cloud_sql"></a> [cloud\_sql](#module\_cloud\_sql) | ./modules/cloud-sql | n/a |
 | <a name="module_compute_backend"></a> [compute\_backend](#module\_compute\_backend) | ./modules/compute-backend | n/a |
+| <a name="module_dns"></a> [dns](#module\_dns) | ./modules/dns | n/a |
 | <a name="module_firewall"></a> [firewall](#module\_firewall) | ./modules/pare-feu | n/a |
 | <a name="module_instances_groups"></a> [instances\_groups](#module\_instances\_groups) | ./modules/instances | n/a |
 | <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./modules/load-balancer | n/a |
@@ -39,6 +40,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_allow_proxy_target_tags"></a> [allow\_proxy\_target\_tags](#input\_allow\_proxy\_target\_tags) | description | `list(any)` | `[]` | no |
+| <a name="input_dns_managed_zone_name"></a> [dns\_managed\_zone\_name](#input\_dns\_managed\_zone\_name) | Le nom de la zone DNS | `string` | n/a | yes |
 | <a name="input_firewall_direction"></a> [firewall\_direction](#input\_firewall\_direction) | Direction of the firewall rule (INGRESS(entry) or EGRESS(sortie)) | `string` | `"INGRESS"` | no |
 | <a name="input_firewall_name"></a> [firewall\_name](#input\_firewall\_name) | Name of the firewall rule | `string` | `null` | no |
 | <a name="input_firewall_network_name"></a> [firewall\_network\_name](#input\_firewall\_network\_name) | Name of the VPC network | `string` | `null` | no |

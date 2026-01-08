@@ -154,3 +154,8 @@ variable "firewall_proxy_prority" {
   type        = number
   description = "La priorité des règles liés au proxy"
 }
+
+variable "dns_managed_zone_name" {
+  type        = string
+  description = "Le nom de la zone DNS"
+}
