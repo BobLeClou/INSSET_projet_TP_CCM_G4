@@ -23,6 +23,9 @@ No providers.
 | <a name="module_instances_groups"></a> [instances\_groups](#module\_instances\_groups) | ./modules/instances | n/a |
 | <a name="module_load_balancer"></a> [load\_balancer](#module\_load\_balancer) | ./modules/load-balancer | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
+| <a name="module_peering_back_cloudsql"></a> [peering\_back\_cloudsql](#module\_peering\_back\_cloudsql) | ./modules/vpc-peering | n/a |
+| <a name="module_peering_bastion_front"></a> [peering\_bastion\_front](#module\_peering\_bastion\_front) | ./modules/vpc-peering | n/a |
+| <a name="module_peering_front_back"></a> [peering\_front\_back](#module\_peering\_front\_back) | ./modules/vpc-peering | n/a |
 | <a name="module_secret_manager"></a> [secret\_manager](#module\_secret\_manager) | ./modules/secret-manager | n/a |
 | <a name="module_service_accounts"></a> [service\_accounts](#module\_service\_accounts) | ./modules/SA-IAM | n/a |
 

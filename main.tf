@@ -148,3 +148,42 @@ module "load_balancer" {
 
   depends_on = [module.network, module.instances_groups]
 }
+
+module "peering_front_back" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "front-to-back"
+  peering_name_b_to_a = "back-to-front"
+  
+  network_a_id = module.network["front"].vpc_id
+  network_b_id = module.network["back"].vpc_id
+  
+  export_custom_routes = true
+  import_custom_routes = true
+
+  depends_on = [module.network]
+}
+
+module "peering_back_cloudsql" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "back-to-cloudsql"
+  peering_name_b_to_a = "cloudsql-to-back"
+  
+  network_a_id = module.network["back"].vpc_id
+  network_b_id = module.network["cloudsql"].vpc_id
+
+  depends_on = [module.network]
+}
+
+module "peering_bastion_front" {
+  source = "./modules/vpc-peering"
+
+  peering_name_a_to_b = "bastion-to-front"
+  peering_name_b_to_a = "front-to-bastion"
+  
+  network_a_id = module.network["bastion"].vpc_id
+  network_b_id = module.network["front"].vpc_id
+
+  depends_on = [module.network]
+}
