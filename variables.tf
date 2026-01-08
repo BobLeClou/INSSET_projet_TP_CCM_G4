@@ -77,6 +77,67 @@ variable "named_ports" {
   default = []
 }
 
+variable "firewall_rules" {
+  description = "Map des règles de pare-feu à créer"
+  type = map(object({
+    firewall_name          = string
+    firewall_network_name  = string
+    firewall_priority      = optional(number, 1000)
+    firewall_protocol      = string
+    firewall_ports         = optional(list(number), [])
+    firewall_source_ranges = list(string)
+    firewall_target_tags   = optional(list(string), [])
+  }))
+  default = {} 
+}
+variable "firewall_name" {
+  description = "Name of the firewall rule"
+  type        = string
+  default     = null
+}
+
+variable "firewall_network_name" {
+  description = "Name of the VPC network"
+  type        = string
+  default     = null
+}
+
+variable "firewall_priority" {
+  description = "Priority of the firewall rule (lower numbers = higher priority)"
+  type        = number
+  default     = 1000
+}
+
+variable "firewall_protocol" {
+  description = "Protocol for the firewall rule (tcp, udp, icmp, etc.)"
+  type        = string
+  default     = null
+}
+
+variable "firewall_ports" {
+  description = "List of ports for the firewall rule"
+  type        = list(number)
+  default     = []
+}
+
+variable "firewall_source_ranges" {
+  description = "List of source CIDR ranges"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_target_tags" {
+  description = "List of target tags for the firewall rule"
+  type        = list(string)
+  default     = []
+}
+
+variable "firewall_direction" {
+  description = "Direction of the firewall rule (INGRESS(entry) or EGRESS(sortie))"
+  type        = string
+  default     = "INGRESS"
+}
+
 #Load balancer
 variable "proxy_subnet_ip_cidr_range" {
   type        = string
