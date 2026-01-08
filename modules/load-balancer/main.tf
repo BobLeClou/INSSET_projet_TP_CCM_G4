@@ -17,7 +17,7 @@ resource "google_compute_firewall" "fw_health_check" {
   network       = var.proxy_subnet_network
   priority      = 1000
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
-  target_tags   = ["load-balanced-backend"]
+  target_tags   = var.allow_proxy_target_tags
 }
 
 #Règle de pare-feu reliant le proxy aux VM
@@ -39,7 +39,7 @@ resource "google_compute_firewall" "allow_proxy" {
   network       = var.proxy_subnet_network
   priority      = var.firewall_proxy_prority
   source_ranges = [var.proxy_subnet_ip_cidr_range]
-  target_tags   = ["load-balanced-backend"]
+  target_tags   = var.allow_proxy_target_tags
 }
 
 #IP statique réservée au load balancer
@@ -65,7 +65,6 @@ resource "google_compute_region_health_check" "lb_health_check" {
 
 resource "google_compute_region_backend_service" "lb_backend_service" {
   name                  = var.lb_backend_service_name
-  region                = "us-west1"
   load_balancing_scheme = "EXTERNAL_MANAGED"
   health_checks         = [google_compute_region_health_check.lb_health_check.id]
   protocol              = "HTTP"
