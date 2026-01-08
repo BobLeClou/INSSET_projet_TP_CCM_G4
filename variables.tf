@@ -1,17 +1,17 @@
 variable "project_id" {
-    description = "The GCP project ID"
-    type        = string
+  description = "The GCP project ID"
+  type        = string
 }
 variable "region" {
-    description = "The GCP region"
-    type        = string
-} 
+  description = "The GCP region"
+  type        = string
+}
 variable "zone" {
-    description = "The GCP zone"
-    type        = string
+  description = "The GCP zone"
+  type        = string
 }
 
 variable "networks" {
-    description = "La déclaration des réseaux"
-    type        = map(any)
+  description = "La déclaration des réseaux"
+  type        = map(any)
 }
