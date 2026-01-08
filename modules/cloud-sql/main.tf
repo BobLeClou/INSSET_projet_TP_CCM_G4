@@ -41,7 +41,7 @@ resource "google_sql_database_instance" "mysql" {
       enabled            = true
       start_time         = "02:00"
       binary_log_enabled = true
-      
+
       backup_retention_settings {
         retained_backups = 7
         retention_unit   = "COUNT"
@@ -50,7 +50,7 @@ resource "google_sql_database_instance" "mysql" {
 
     # Maintenance window
     maintenance_window {
-      day          = 7  # Dimanche
+      day          = 7 # Dimanche
       hour         = 3
       update_track = "stable"
     }
